@@ -70,7 +70,6 @@ async fn main() -> BoxResult<()> {
         )
         .arg(
             Arg::with_name("continue")
-                .short("c")
                 .long("continue")
                 .required(false)
                 .value_name("STREAM_CONTINUE")

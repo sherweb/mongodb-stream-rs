@@ -70,7 +70,17 @@ impl DB {
             Ok(result) => {
                 match result {
                     Some(doc) => {
-                        let id = doc.get_object_id("_id").ok()?.to_string();
+                        let rawid = doc.get("_id").ok_or("unexpected id type").unwrap().to_string();
+                        let tmpuuid = Uuid::parse_str(&rawid);
+                        let id: String;
+                        match tmpuuid {
+                            Ok(myuuid) => {
+                                id = myuuid.to_string();
+                            },
+                            Err(_) => {
+                                id = doc.get_object_id("_id").ok()?.to_string();
+                            }
+                        };
                         log::info!("{}.{}: Found newest doc with id: {}", db, collection, &id);
                         Some(id)
                     },
