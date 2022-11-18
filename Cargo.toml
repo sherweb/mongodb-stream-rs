@@ -19,3 +19,4 @@ mongodb = { version = "1.1.1", default-features = false, features = ["async-std-
 futures = { version = "0.3.4", default-features = false, features = ["async-await"] }
 bson = "1.1"
 tokio = { version = "1", features = ["full", "rt"] }
+uuid = { version = "1.2.2", features = ["v4"] }

@@ -11,6 +11,7 @@ use std::mem;
 use bson::oid::ObjectId;
 use std::sync::Arc;
 use tokio::sync::Semaphore;
+use uuid::{Uuid, Version};
 
 #[derive(Clone, Debug)]
 pub struct DB {
@@ -115,7 +116,17 @@ impl DB {
 
         // If --continue is set, find the oldest doc, and start there
         let query = match newest {
-            Some(ref id) => doc!{ "_id": {"$gt": ObjectId::with_string(id)? } },
+            Some(ref id) => {
+                let uuid = Uuid::parse_str(id);
+                match uuid {
+                    Ok(_) => {
+                        doc!{ "_id": {"$gt": id } }
+                    },
+                    Err(_) => {
+                        doc!{ "_id": {"$gt": ObjectId::with_string(id)? } }
+                    }
+                }
+            }
             None => doc!{}
         };
 
